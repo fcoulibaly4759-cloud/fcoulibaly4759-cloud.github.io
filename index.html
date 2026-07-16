@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galaxy Quest | Learn the Planets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Interactive space adventure</p>
+          <h1>Galaxy Quest</h1>
+          <p class="hero-text">
+            Blast through asteroid fields, collect points, and unlock fascinating facts about the planets as you explore the galaxy.
+          </p>
+          <div class="hero-actions">
+            <button id="restart-btn" type="button">Restart game</button>
+            <span class="mini-note">Use ← → or A / D to move, and press space to fire.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-section">
+        <div class="hud-card">
+          <div class="stat">
+            <span class="stat-label">Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Lives</span>
+            <strong id="lives">3</strong>
+          </div>
+          <div class="stat stat-wide">
+            <span class="stat-label">Planet fact</span>
+            <strong id="fact">Shoot asteroids to learn about the solar system.</strong>
+          </div>
+        </div>
+
+        <div id="game-container"></div>
+
+        <div class="info-card">
+          <h2>How to play</h2>
+          <ul>
+            <li>Move the explorer ship to dodge incoming asteroids.</li>
+            <li>Fire at the asteroids to collect points and reveal planet facts.</li>
+            <li>Each hit teaches you something new about our galaxy.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="fact-section">
+        <h2>Facts unlocked</h2>
+        <div id="fact-list" class="fact-list"></div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
