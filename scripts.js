@@ -1,262 +1,293 @@
-const planetData = [
-  { planet: 'Mercury', fact: 'Mercury is the smallest planet and the closest to the Sun.', color: [255, 204, 153] },
-  { planet: 'Venus', fact: 'Venus is wrapped in thick clouds that trap heat and make it very hot.', color: [255, 175, 100] },
-  { planet: 'Earth', fact: 'Earth is the only known planet to support life.', color: [92, 204, 130] },
-  { planet: 'Mars', fact: 'Mars is called the Red Planet because of iron-rich dust.', color: [244, 114, 182] },
-  { planet: 'Jupiter', fact: 'Jupiter is the largest planet and has a giant storm called the Great Red Spot.', color: [251, 191, 36] },
-  { planet: 'Saturn', fact: 'Saturn is famous for its bright rings made of ice and rock.', color: [253, 230, 138] },
-  { planet: 'Uranus', fact: 'Uranus spins on its side, making it very unusual among the planets.', color: [125, 211, 252] },
-  { planet: 'Neptune', fact: 'Neptune is a cold ice giant with very fast winds.', color: [96, 165, 250] }
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const stageEl = document.getElementById('stage');
+const factEl = document.getElementById('fact');
+const factList = document.getElementById('fact-list');
+const restartBtn = document.getElementById('restart-btn');
+const startBtn = document.getElementById('start-btn');
+const factsBtn = document.getElementById('facts-btn');
+const factsSection = document.getElementById('facts-section');
+
+const facts = [
+  { title: 'Mercury', detail: 'Mercury is the smallest planet and closest to the Sun.' },
+  { title: 'Venus', detail: 'Venus spins backward compared to most planets.' },
+  { title: 'Earth', detail: 'Our planet is the only one known to host life.' },
+  { title: 'Mars', detail: 'Mars has the tallest volcano in the solar system.' },
+  { title: 'Jupiter', detail: 'Jupiter is so large it could fit 1,300 Earths inside.' },
+  { title: 'Saturn', detail: 'Saturn has more than 80 moons and bright rings.' },
+  { title: 'Uranus', detail: 'Uranus rotates on its side like a rolling ball.' },
+  { title: 'Neptune', detail: 'Neptune appears blue because of methane in its atmosphere.' },
 ];
 
-let player;
-let asteroids = [];
-let shots = [];
-let stars = [];
-let score = 0;
-let lives = 3;
-let lastSpawn = 0;
-let spawnDelay = 900;
-let gameOver = false;
-let currentFact = 'Shoot asteroids to learn about the solar system.';
-let unlockedFacts = [];
+const gameState = {
+  score: 0,
+  lives: 3,
+  stage: 1,
+  objects: [],
+  keys: {},
+  frame: 0,
+  running: false,
+  unlocked: [],
+};
 
-function setup() {
-  const container = document.getElementById('game-container');
-  const canvas = createCanvas(container.clientWidth, 420);
-  canvas.parent('game-container');
-  pixelDensity(1);
+const player = {
+  x: 360,
+  y: 360,
+  width: 44,
+  height: 24,
+  speed: 6,
+};
 
-  player = {
-    x: width / 2,
-    y: height - 48,
-    size: 26,
-    speed: 6
-  };
+const backgroundStars = Array.from({ length: 80 }, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  radius: Math.random() * 1.4 + 0.4,
+  alpha: Math.random() * 0.6 + 0.3,
+}));
 
-  stars = Array.from({ length: 90 }, () => ({
-    x: random(width),
-    y: random(height),
-    size: random(1, 2.5),
-    alpha: random(0.3, 1)
-  }));
-
-  resetGame();
+function resizeCanvas() {
+  const containerWidth = canvas.parentElement.offsetWidth;
+  const ratio = canvas.width / canvas.height;
+  canvas.style.width = `${containerWidth}px`;
+  canvas.style.height = `${containerWidth / ratio}px`;
 }
 
 function resetGame() {
-  asteroids = [];
-  shots = [];
-  score = 0;
-  lives = 3;
-  lastSpawn = 0;
-  spawnDelay = 900;
-  gameOver = false;
-  currentFact = 'Shoot asteroids to learn about the solar system.';
-  unlockedFacts = [];
+  gameState.score = 0;
+  gameState.lives = 3;
+  gameState.stage = 1;
+  gameState.objects = [];
+  gameState.frame = 0;
+  gameState.running = true;
+  gameState.unlocked = [];
+  player.x = canvas.width / 2 - player.width / 2;
   updateHud();
+  updateFact('Collect star clusters to unlock solar system facts.');
   renderFacts();
-  player.x = width / 2;
-}
-
-function draw() {
-  background(3, 8, 24);
-  drawStars();
-
-  if (!gameOver) {
-    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-      player.x -= player.speed;
-    }
-    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-      player.x += player.speed;
-    }
-
-    player.x = constrain(player.x, 24, width - 24);
-
-    if (millis() - lastSpawn > spawnDelay) {
-      spawnAsteroid();
-      lastSpawn = millis();
-      spawnDelay = max(450, spawnDelay - 20);
-    }
-
-    updateShots();
-    updateAsteroids();
-  }
-
-  drawPlayer();
-  drawShots();
-  drawAsteroids();
-  drawOverlay();
-}
-
-function drawStars() {
-  for (const star of stars) {
-    noStroke();
-    fill(255, 255, 255, star.alpha * 255);
-    circle(star.x, star.y, star.size);
-  }
-}
-
-function spawnAsteroid() {
-  const entry = random(planetData);
-  asteroids.push({
-    x: random(20, width - 20),
-    y: -30,
-    size: random(18, 34),
-    speed: random(2.2, 4.8),
-    drift: random(-1.6, 1.6),
-    planet: entry.planet,
-    fact: entry.fact,
-    color: entry.color
-  });
-}
-
-function updateShots() {
-  for (let i = shots.length - 1; i >= 0; i--) {
-    shots[i].y -= 8;
-    if (shots[i].y < -20) {
-      shots.splice(i, 1);
-    }
-  }
-}
-
-function updateAsteroids() {
-  for (let i = asteroids.length - 1; i >= 0; i--) {
-    asteroids[i].x += asteroids[i].drift;
-    asteroids[i].y += asteroids[i].speed;
-
-    if (asteroids[i].y - asteroids[i].size > height + 20) {
-      asteroids.splice(i, 1);
-      lives -= 1;
-      if (lives <= 0) {
-        gameOver = true;
-        currentFact = 'Game over. Restart to explore the galaxy again.';
-      }
-      updateHud();
-      continue;
-    }
-
-    for (let j = shots.length - 1; j >= 0; j--) {
-      const shot = shots[j];
-      const asteroid = asteroids[i];
-      if (dist(shot.x, shot.y, asteroid.x, asteroid.y) < shot.radius + asteroid.size / 2) {
-        score += 10;
-        currentFact = `${asteroid.planet}: ${asteroid.fact}`;
-        if (!unlockedFacts.includes(asteroid.planet)) {
-          unlockedFacts.push(asteroid.planet);
-          renderFacts();
-        }
-        shots.splice(j, 1);
-        asteroids.splice(i, 1);
-        updateHud();
-        break;
-      }
-    }
-  }
-}
-
-function drawPlayer() {
-  push();
-  translate(player.x, player.y);
-  fill(56, 189, 248);
-  noStroke();
-  triangle(0, -20, -16, 18, 16, 18);
-  fill(191, 219, 254);
-  rect(-8, -6, 16, 12, 4);
-  fill(15, 23, 42);
-  circle(0, -2, 5);
-  pop();
-}
-
-function drawShots() {
-  for (const shot of shots) {
-    stroke(255, 221, 102);
-    strokeWeight(3);
-    line(shot.x, shot.y - 8, shot.x, shot.y + 8);
-  }
-}
-
-function drawAsteroids() {
-  for (const asteroid of asteroids) {
-    push();
-    translate(asteroid.x, asteroid.y);
-    fill(asteroid.color[0], asteroid.color[1], asteroid.color[2]);
-    noStroke();
-    circle(0, 0, asteroid.size);
-    fill(30, 41, 59, 180);
-    circle(-5, -4, asteroid.size * 0.35);
-    fill(255, 255, 255, 90);
-    circle(4, 3, asteroid.size * 0.2);
-    pop();
-  }
-}
-
-function drawOverlay() {
-  if (gameOver) {
-    fill(2, 6, 23, 180);
-    rect(0, 0, width, height);
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(26);
-    text('Mission complete!', width / 2, height / 2 - 16);
-    textSize(16);
-    text('Press restart to play again.', width / 2, height / 2 + 18);
-  }
-}
-
-function keyPressed() {
-  if (key === ' ' || keyCode === 32) {
-    if (!gameOver) {
-      shots.push({ x: player.x, y: player.y - 20, radius: 5 });
-    }
-    return false;
-  }
-
-  if (key === 'r' || key === 'R') {
-    resetGame();
-  }
-}
-
-function mousePressed() {
-  if (!gameOver && mouseY > 0 && mouseY < height && mouseX > 0 && mouseX < width) {
-    shots.push({ x: player.x, y: player.y - 20, radius: 5 });
-  }
-}
-
-function windowResized() {
-  const container = document.getElementById('game-container');
-  resizeCanvas(container.clientWidth, 420);
-  stars = Array.from({ length: 90 }, () => ({
-    x: random(width),
-    y: random(height),
-    size: random(1, 2.5),
-    alpha: random(0.3, 1)
-  }));
-  player.x = width / 2;
-  player.y = height - 48;
 }
 
 function updateHud() {
-  document.getElementById('score').textContent = score;
-  document.getElementById('lives').textContent = lives;
-  document.getElementById('fact').textContent = currentFact;
+  scoreEl.textContent = gameState.score;
+  livesEl.textContent = gameState.lives;
+  stageEl.textContent = gameState.stage;
+}
+
+function updateFact(text) {
+  factEl.textContent = text;
 }
 
 function renderFacts() {
-  const list = document.getElementById('fact-list');
-  list.innerHTML = '';
-  if (unlockedFacts.length === 0) {
-    list.innerHTML = '<div class="fact-pill"><strong>No facts yet</strong>Start shooting asteroids to unlock planet facts.</div>';
-    return;
-  }
-
-  unlockedFacts.forEach((planet) => {
-    const entry = planetData.find((item) => item.planet === planet);
-    const item = document.createElement('div');
-    item.className = 'fact-pill';
-    item.innerHTML = `<strong>${entry.planet}</strong>${entry.fact}`;
-    list.appendChild(item);
+  factList.innerHTML = '';
+  gameState.unlocked.forEach((fact) => {
+    const pill = document.createElement('div');
+    pill.className = 'fact-pill';
+    pill.innerHTML = `<strong>${fact.title}</strong>${fact.detail}`;
+    factList.appendChild(pill);
   });
 }
 
-document.getElementById('restart-btn').addEventListener('click', resetGame);
+function spawnObject() {
+  const type = Math.random() < 0.7 ? 'star' : 'comet';
+  const size = type === 'star' ? 14 : 20;
+  gameState.objects.push({
+    x: Math.random() * (canvas.width - size) + size / 2,
+    y: -size,
+    size,
+    type,
+    speed: 2.1 + gameState.stage * 0.35 + Math.random() * 1.2,
+  });
+}
+
+function unlockFact() {
+  if (gameState.unlocked.length >= facts.length) return;
+  const nextFact = facts[gameState.unlocked.length];
+  gameState.unlocked.push(nextFact);
+  updateFact(`${nextFact.title}: ${nextFact.detail}`);
+  renderFacts();
+}
+
+function drawBackground() {
+  ctx.fillStyle = '#04111f';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  backgroundStars.forEach((star, index) => {
+    star.y += 0.3;
+    if (star.y > canvas.height) {
+      star.y = 0;
+      star.x = Math.random() * canvas.width;
+    }
+    ctx.globalAlpha = star.alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    if (index % 12 === 0) {
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
+      ctx.beginPath();
+      ctx.moveTo(star.x - 5, star.y);
+      ctx.lineTo(star.x + 5, star.y);
+      ctx.stroke();
+    }
+  });
+}
+
+function drawPlayer() {
+  ctx.fillStyle = '#7dd3fc';
+  ctx.beginPath();
+  ctx.moveTo(player.x, player.y + player.height);
+  ctx.lineTo(player.x + player.width / 2, player.y);
+  ctx.lineTo(player.x + player.width, player.y + player.height);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = '#cffafe';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function drawObjects() {
+  gameState.objects.forEach((obj) => {
+    if (obj.type === 'star') {
+      ctx.fillStyle = '#f8b4d9';
+      ctx.beginPath();
+      ctx.arc(obj.x, obj.y, obj.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fed7aa';
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = '#fb923c';
+      ctx.beginPath();
+      ctx.moveTo(obj.x - obj.size / 2, obj.y + obj.size / 2);
+      ctx.lineTo(obj.x + obj.size / 2, obj.y);
+      ctx.lineTo(obj.x + obj.size / 2, obj.y + obj.size);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#fef08a';
+      ctx.stroke();
+    }
+  });
+}
+
+function movePlayer() {
+  const left = gameState.keys.ArrowLeft || gameState.keys.KeyA;
+  const right = gameState.keys.ArrowRight || gameState.keys.KeyD;
+  if (left && player.x > 0) {
+    player.x -= player.speed;
+  }
+  if (right && player.x + player.width < canvas.width) {
+    player.x += player.speed;
+  }
+}
+
+function checkCollisions() {
+  gameState.objects = gameState.objects.filter((obj) => {
+    const dx = Math.abs(obj.x - (player.x + player.width / 2));
+    const dy = Math.abs(obj.y - (player.y + player.height / 2));
+    const distance = Math.hypot(dx, dy);
+    if (distance < obj.size / 1.5) {
+      if (obj.type === 'star') {
+        gameState.score += 10;
+        if (gameState.score % 50 === 0) {
+          unlockFact();
+        }
+      } else {
+        gameState.lives -= 1;
+      }
+      updateHud();
+      return false;
+    }
+    return obj.y < canvas.height + obj.size;
+  });
+}
+
+function drawOverlay() {
+  if (!gameState.running) {
+    ctx.fillStyle = 'rgba(2, 10, 28, 0.82)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '22px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Press Start to launch the mission', canvas.width / 2, canvas.height / 2 - 12);
+    ctx.font = '16px Inter, sans-serif';
+    ctx.fillText('Use arrow keys or A/D. Press R to restart.', canvas.width / 2, canvas.height / 2 + 22);
+  }
+}
+
+function endGame() {
+  gameState.running = false;
+  updateFact('Mission complete. Restart to explore again.');
+}
+
+function updateStage() {
+  const stage = Math.floor(gameState.score / 80) + 1;
+  if (stage !== gameState.stage) {
+    gameState.stage = stage;
+    updateHud();
+  }
+}
+
+function animate() {
+  if (!canvas || !ctx) return;
+  if (gameState.running) {
+    movePlayer();
+    if (gameState.frame % 50 === 0) spawnObject();
+    gameState.objects.forEach((obj) => {
+      obj.y += obj.speed;
+    });
+    checkCollisions();
+    updateStage();
+    if (gameState.lives <= 0) {
+      endGame();
+    }
+  }
+
+  drawBackground();
+  drawObjects();
+  drawPlayer();
+  drawOverlay();
+
+  gameState.frame += 1;
+  requestAnimationFrame(animate);
+}
+
+function attachControls() {
+  window.addEventListener('keydown', (event) => {
+    gameState.keys[event.code] = true;
+    if (event.code === 'KeyR') {
+      resetGame();
+    }
+  });
+  window.addEventListener('keyup', (event) => {
+    gameState.keys[event.code] = false;
+  });
+
+  restartBtn.addEventListener('click', resetGame);
+  startBtn.addEventListener('click', () => {
+    if (!gameState.running) {
+      gameState.running = true;
+      updateFact('Mission started. Collect stars and stay alive!');
+    }
+    if (gameState.score === 0 && gameState.lives === 3 && gameState.unlocked.length === 0) {
+      resetGame();
+    }
+  });
+
+  factsBtn.addEventListener('click', () => {
+    factsSection.scrollIntoView({ behavior: 'smooth' });
+  });
+}
+
+function init() {
+  resizeCanvas();
+  resetGame();
+  attachControls();
+  animate();
+}
+
+window.addEventListener('load', init);
+window.addEventListener('resize', resizeCanvas);
