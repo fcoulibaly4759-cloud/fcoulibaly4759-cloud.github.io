@@ -1,26 +1,255 @@
-const factBtn = document.getElementById('fact-btn');
-const factText = document.getElementById('fact-text');
-
-const maliFacts = [
-  'Mali was once home to the Mali Empire, one of the wealthiest medieval empires in West Africa.',
-  'Timbuktu was a famous center for Islamic scholarship and a key stop on trans-Saharan trade routes.',
-  'Malian music blends traditional instruments like the kora and balafon with contemporary sounds.',
-  'Mud cloth known as bogolanfini is a traditional textile art made using fermented mud and natural dyes.',
-  'Griots are storytellers and oral historians who pass on Mali’s history through song and poetry.',
-  'The Niger River is a vital cultural artery, shaping farming, festivals, and daily life across Mali.',
-  'The city of Djenné is home to the largest mud-brick building in the world, the Great Mosque of Djenné.',
-  'Mali is known for its warm hospitality, where guests are welcomed with shared meals and respect.',
-];
-
-function randomFact() {
-  const nextFact = maliFacts[Math.floor(Math.random() * maliFacts.length)];
-  factText.textContent = nextFact;
+:root {
+  color-scheme: dark;
+  --bg: #0d1626;
+  --surface: rgba(14, 28, 54, 0.82);
+  --surface-strong: rgba(25, 40, 72, 0.96);
+  --text: #f7f5ef;
+  --muted: #d7c8ad;
+  --accent: #f0b12b;
+  --accent-2: #d36e3c;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
-factBtn.addEventListener('click', randomFact);
+* {
+  box-sizing: border-box;
+}
 
-window.addEventListener('load', () => {
-  if (factText) {
-    factText.textContent = maliFacts[0];
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: #0b111f;
+  background-image:
+    linear-gradient(180deg, rgba(11, 17, 31, 0.84), rgba(5, 8, 18, 0.96)),
+    url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1800&q=80');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text);
+}
+
+.page-shell {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr);
+  gap: 28px;
+  align-items: start;
+  margin-bottom: 32px;
+}
+
+.hero-copy {
+  padding: 32px 0 0;
+}
+
+.eyebrow,
+.panel-heading,
+.fact-card strong {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  font-size: 0.78rem;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+h1,
+h2,
+h3,
+.feature-card h3 {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(3rem, 6vw, 4.8rem);
+  line-height: 1.02;
+}
+
+.hero-text,
+.section-heading p,
+.feature-copy p,
+.facts-header p,
+.card p,
+.feature-card p,
+.fact-card p {
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  border-radius: 999px;
+  padding: 14px 22px;
+  text-decoration: none;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  font-weight: 600;
+  box-shadow: 0 18px 45px rgba(240, 177, 43, 0.22);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+}
+
+.hero-panel,
+.info-section,
+.feature-section,
+.facts-section,
+.card,
+.feature-card,
+.fact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.18);
+}
+
+.hero-panel {
+  padding: 28px;
+}
+
+.panel-grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.panel-grid div {
+  padding: 18px;
+  background: var(--surface-strong);
+  border-radius: 18px;
+}
+
+.panel-grid span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.panel-grid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1rem;
+  color: white;
+}
+
+.info-section,
+.feature-section,
+.facts-section {
+  padding: 32px;
+  margin-bottom: 28px;
+}
+
+.section-heading {
+  max-width: 720px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.card {
+  padding: 24px;
+  min-height: 220px;
+}
+
+.card h3,
+.feature-card h3 {
+  margin-bottom: 14px;
+  font-size: 1.25rem;
+}
+
+.feature-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr);
+  gap: 26px;
+}
+
+.feature-copy ul {
+  margin: 24px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.feature-copy ul li {
+  margin-bottom: 12px;
+}
+
+.feature-card {
+  padding: 28px;
+}
+
+.facts-header {
+  max-width: 720px;
+}
+
+.fact-card {
+  margin-top: 24px;
+  padding: 32px;
+  min-height: 180px;
+}
+
+.fact-card strong {
+  color: var(--accent);
+}
+
+.fact-card p {
+  margin: 18px 0 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .feature-section {
+    grid-template-columns: 1fr;
   }
-});
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    padding: 20px 16px 50px;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 12vw, 3.8rem);
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
