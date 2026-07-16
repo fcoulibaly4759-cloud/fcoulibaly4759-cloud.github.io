@@ -1,103 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galaxy Explorer | Learn and Play</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="page-shell">
-      <header class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Play + Learn</p>
-          <h1>Galaxy Explorer</h1>
-          <p class="hero-text">
-            A mixed website experience with a real interactive mini-game, planet facts, and a space-themed showcase.
-          </p>
-          <div class="hero-actions">
-            <button id="start-btn" type="button">Start the mission</button>
-            <button id="facts-btn" type="button">View planet facts</button>
-          </div>
-        </div>
-        <div class="hero-panel">
-          <div class="panel-heading">Mission control</div>
-          <div class="panel-grid">
-            <div>
-              <span>Mission type</span>
-              <strong>Interactive page</strong>
-            </div>
-            <div>
-              <span>Game mode</span>
-              <strong>Mini explorer</strong>
-            </div>
-            <div>
-              <span>Learning track</span>
-              <strong>Solar system facts</strong>
-            </div>
-          </div>
-        </div>
-      </header>
+const factBtn = document.getElementById('fact-btn');
+const factText = document.getElementById('fact-text');
 
-      <section class="feature-section">
-        <article class="feature-card">
-          <h2>Why this page is special</h2>
-          <p>
-            This site blends a polished landing page with a playable browser experience. Scroll down to launch the game, learn about the planets, and keep score as you progress.
-          </p>
-          <ul>
-            <li>Responsive landing page with clear content sections.</li>
-            <li>Embedded canvas game that rewards exploration.</li>
-            <li>Fast facts unlocked as you play.</li>
-          </ul>
-        </article>
-      </section>
+const maliFacts = [
+  'Mali was once home to the Mali Empire, one of the wealthiest medieval empires in West Africa.',
+  'Timbuktu was a famous center for Islamic scholarship and a key stop on trans-Saharan trade routes.',
+  'Malian music blends traditional instruments like the kora and balafon with contemporary sounds.',
+  'Mud cloth known as bogolanfini is a traditional textile art made using fermented mud and natural dyes.',
+  'Griots are storytellers and oral historians who pass on Mali’s history through song and poetry.',
+  'The Niger River is a vital cultural artery, shaping farming, festivals, and daily life across Mali.',
+  'The city of Djenné is home to the largest mud-brick building in the world, the Great Mosque of Djenné.',
+  'Mali is known for its warm hospitality, where guests are welcomed with shared meals and respect.',
+];
 
-      <section class="interactive-section" id="play-section">
-        <div class="interactive-panel">
-          <div class="panel-header">
-            <div>
-              <h2>Explorer mini-game</h2>
-              <p>Move left and right to collect stars, avoid comets, and unlock new facts.</p>
-            </div>
-            <button id="restart-btn" type="button">Restart game</button>
-          </div>
+function randomFact() {
+  const nextFact = maliFacts[Math.floor(Math.random() * maliFacts.length)];
+  factText.textContent = nextFact;
+}
 
-          <div class="game-hud">
-            <div class="stat">
-              <span>Score</span>
-              <strong id="score">0</strong>
-            </div>
-            <div class="stat">
-              <span>Lives</span>
-              <strong id="lives">3</strong>
-            </div>
-            <div class="stat">
-              <span>Stage</span>
-              <strong id="stage">1</strong>
-            </div>
-          </div>
+factBtn.addEventListener('click', randomFact);
 
-          <div class="canvas-shell">
-            <canvas id="game-canvas" width="720" height="420"></canvas>
-          </div>
-
-          <div class="game-info">
-            <p id="fact">Collect star clusters to unlock solar system facts.</p>
-            <p class="small-note">Use ← / → or A / D to move. Press R to restart.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="fact-section" id="facts-section">
-        <h2>Facts unlocked</h2>
-        <div id="fact-list" class="fact-list"></div>
-      </section>
-    </main>
-
-    <script src="script.js"></script>
-  </body>
-</html>
+window.addEventListener('load', () => {
+  if (factText) {
+    factText.textContent = maliFacts[0];
+  }
+});
