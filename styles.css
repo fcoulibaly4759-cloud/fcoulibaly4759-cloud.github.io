@@ -1,282 +1,103 @@
-:root {
-  color-scheme: dark;
-  --bg: #050816;
-  --panel: rgba(15, 23, 42, 0.94);
-  --panel-soft: rgba(30, 41, 59, 0.88);
-  --text: #f8fafc;
-  --muted: #cbd5e1;
-  --accent: #38bdf8;
-  --accent-2: #818cf8;
-  --success: #22c55e;
-  --danger: #f59e0b;
-}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galaxy Explorer | Learn and Play</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Play + Learn</p>
+          <h1>Galaxy Explorer</h1>
+          <p class="hero-text">
+            A mixed website experience with a real interactive mini-game, planet facts, and a space-themed showcase.
+          </p>
+          <div class="hero-actions">
+            <button id="start-btn" type="button">Start the mission</button>
+            <button id="facts-btn" type="button">View planet facts</button>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-heading">Mission control</div>
+          <div class="panel-grid">
+            <div>
+              <span>Mission type</span>
+              <strong>Interactive page</strong>
+            </div>
+            <div>
+              <span>Game mode</span>
+              <strong>Mini explorer</strong>
+            </div>
+            <div>
+              <span>Learning track</span>
+              <strong>Solar system facts</strong>
+            </div>
+          </div>
+        </div>
+      </header>
 
-* {
-  box-sizing: border-box;
-}
+      <section class="feature-section">
+        <article class="feature-card">
+          <h2>Why this page is special</h2>
+          <p>
+            This site blends a polished landing page with a playable browser experience. Scroll down to launch the game, learn about the planets, and keep score as you progress.
+          </p>
+          <ul>
+            <li>Responsive landing page with clear content sections.</li>
+            <li>Embedded canvas game that rewards exploration.</li>
+            <li>Fast facts unlocked as you play.</li>
+          </ul>
+        </article>
+      </section>
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top, #1e2a4f 0%, #050816 48%, #02040d 100%);
-  color: var(--text);
-}
+      <section class="interactive-section" id="play-section">
+        <div class="interactive-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Explorer mini-game</h2>
+              <p>Move left and right to collect stars, avoid comets, and unlock new facts.</p>
+            </div>
+            <button id="restart-btn" type="button">Restart game</button>
+          </div>
 
-.page-shell {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 28px 20px 60px;
-}
+          <div class="game-hud">
+            <div class="stat">
+              <span>Score</span>
+              <strong id="score">0</strong>
+            </div>
+            <div class="stat">
+              <span>Lives</span>
+              <strong id="lives">3</strong>
+            </div>
+            <div class="stat">
+              <span>Stage</span>
+              <strong id="stage">1</strong>
+            </div>
+          </div>
 
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
-  gap: 28px;
-  align-items: center;
-  padding-bottom: 30px;
-}
+          <div class="canvas-shell">
+            <canvas id="game-canvas" width="720" height="420"></canvas>
+          </div>
 
-.eyebrow,
-.panel-heading {
-  text-transform: uppercase;
-  letter-spacing: 0.35em;
-  font-size: 0.8rem;
-  color: var(--accent);
-}
+          <div class="game-info">
+            <p id="fact">Collect star clusters to unlock solar system facts.</p>
+            <p class="small-note">Use ← / → or A / D to move. Press R to restart.</p>
+          </div>
+        </div>
+      </section>
 
-h1 {
-  margin: 0;
-  font-size: clamp(2.5rem, 5vw, 4.6rem);
-  line-height: 1.05;
-}
+      <section class="fact-section" id="facts-section">
+        <h2>Facts unlocked</h2>
+        <div id="fact-list" class="fact-list"></div>
+      </section>
+    </main>
 
-.hero-text {
-  max-width: 720px;
-  margin: 16px 0 0;
-  font-size: 1.05rem;
-  line-height: 1.75;
-  color: var(--muted);
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 22px;
-}
-
-button {
-  border: none;
-  border-radius: 999px;
-  padding: 14px 22px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
-  box-shadow: 0 16px 40px rgba(56, 189, 248, 0.22);
-}
-
-button:hover {
-  transform: translateY(-2px);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-.hero-panel,
-.feature-card,
-.interactive-panel,
-.fact-section {
-  background: var(--panel);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 24px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 26px 70px rgba(2, 6, 23, 0.24);
-}
-
-.hero-panel {
-  padding: 24px;
-}
-
-.panel-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 20px;
-}
-
-.panel-grid div,
-.feature-card ul li,
-.fact-pill {
-  color: var(--muted);
-}
-
-.panel-grid div strong {
-  display: block;
-  margin-top: 6px;
-  color: white;
-  font-size: 1rem;
-}
-
-.feature-section {
-  margin-top: 12px;
-}
-
-.feature-card {
-  padding: 28px;
-}
-
-.feature-card h2,
-.interactive-panel h2,
-.fact-section h2 {
-  margin-top: 0;
-  margin-bottom: 14px;
-  font-size: 1.5rem;
-}
-
-.feature-card p {
-  max-width: 720px;
-  line-height: 1.8;
-  margin-bottom: 20px;
-}
-
-.feature-card ul {
-  padding-left: 20px;
-  margin: 0;
-  list-style: disc;
-  line-height: 1.75;
-}
-
-.feature-card ul li {
-  margin-bottom: 10px;
-}
-
-.interactive-section {
-  margin-top: 32px;
-}
-
-.interactive-panel {
-  padding: 24px;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.game-hud {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 22px 0;
-}
-
-.stat {
-  padding: 18px;
-  background: var(--panel-soft);
-  border-radius: 18px;
-}
-
-.stat span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.82rem;
-  margin-bottom: 6px;
-}
-
-.stat strong {
-  font-size: 1.2rem;
-}
-
-.canvas-shell {
-  border-radius: 24px;
-  overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: #04111f;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.game-info {
-  margin-top: 18px;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.game-info p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-.small-note {
-  color: #a5b4fc;
-}
-
-.fact-section {
-  margin-top: 28px;
-  padding: 24px;
-}
-
-.fact-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 18px;
-}
-
-.fact-pill {
-  background: var(--panel-soft);
-  padding: 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(56, 189, 248, 0.18);
-}
-
-.fact-pill strong {
-  display: block;
-  color: white;
-  margin-bottom: 8px;
-  font-size: 1rem;
-}
-
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .panel-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .game-hud {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .page-shell {
-    padding: 18px 14px 50px;
-  }
-
-  h1 {
-    font-size: clamp(2.3rem, 10vw, 3.6rem);
-  }
-
-  .hero-actions,
-  .game-info {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
+    <script src="script.js"></script>
+  </body>
+</html>
