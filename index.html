@@ -3,66 +3,107 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galaxy Quest | Learn the Planets</title>
+    <title>Mali Culture | Heritage, Music, and Art</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="page-shell">
-      <section class="hero">
+      <header class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Interactive space adventure</p>
-          <h1>Galaxy Quest</h1>
+          <p class="eyebrow">Mali</p>
+          <h1>Explore the culture of Mali</h1>
           <p class="hero-text">
-            Blast through asteroid fields, collect points, and unlock fascinating facts about the planets as you explore the galaxy.
+            Discover a country shaped by ancient empires, vibrant music, storytelling, and craftsmanship from the heart of West Africa.
           </p>
           <div class="hero-actions">
-            <button id="restart-btn" type="button">Restart game</button>
-            <span class="mini-note">Use ← → or A / D to move, and press space to fire.</span>
+            <a href="#culture-section" class="button">Explore culture</a>
+            <button id="fact-btn" type="button" class="button button-secondary">Show a Mali fact</button>
           </div>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-heading">Culture highlights</div>
+          <div class="panel-grid">
+            <div>
+              <span>Language</span>
+              <strong>French, Bambara, and more</strong>
+            </div>
+            <div>
+              <span>Music</span>
+              <strong>Desert blues and djembe rhythms</strong>
+            </div>
+            <div>
+              <span>Craft</span>
+              <strong>Textiles, metalwork, and storytelling</strong>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="info-section" id="culture-section">
+        <div class="section-heading">
+          <h2>Mali's cultural pillars</h2>
+          <p>
+            Mali blends history and modern life through artistic expression, hospitality, and spiritual traditions that remain alive today.
+          </p>
+        </div>
+
+        <div class="cards-grid">
+          <article class="card">
+            <h3>Music & dance</h3>
+            <p>
+              Mali is famous for its musicians and performers. From the sounds of the kora to the energy of dance, music guides daily life.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Storytelling</h3>
+            <p>
+              Griots are storytellers, poets, and historians who preserve Mali's heritage through oral tradition and song.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Textile art</h3>
+            <p>
+              Colorful mud cloth, indigo fabrics, and woven patterns are crafted across Mali and worn with pride in culture and ceremony.
+            </p>
+          </article>
         </div>
       </section>
 
-      <section class="game-section">
-        <div class="hud-card">
-          <div class="stat">
-            <span class="stat-label">Score</span>
-            <strong id="score">0</strong>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Lives</span>
-            <strong id="lives">3</strong>
-          </div>
-          <div class="stat stat-wide">
-            <span class="stat-label">Planet fact</span>
-            <strong id="fact">Shoot asteroids to learn about the solar system.</strong>
-          </div>
-        </div>
-
-        <div id="game-container"></div>
-
-        <div class="info-card">
-          <h2>How to play</h2>
+      <section class="feature-section">
+        <div class="feature-copy">
+          <h2>From Timbuktu to the Niger River</h2>
+          <p>
+            Mali's culture grew around the Niger River and ancient trade routes. The legendary city of Timbuktu was once a center of learning, and the Sahel remains a place of resilience and creativity.
+          </p>
           <ul>
-            <li>Move the explorer ship to dodge incoming asteroids.</li>
-            <li>Fire at the asteroids to collect points and reveal planet facts.</li>
-            <li>Each hit teaches you something new about our galaxy.</li>
+            <li>Family, community, and hospitality are at the center of daily life.</li>
+            <li>Festivals combine music, religious life, and storytelling in public celebration.</li>
+            <li>Traditional crafts connect modern Mali to its centuries-old past.</li>
           </ul>
         </div>
+        <div class="feature-card feature-highlight">
+          <h3>Featured tradition</h3>
+          <p>
+            The djembe drum is more than an instrument—it is a way to bring people together, celebrate and tell stories with rhythm.
+          </p>
+        </div>
       </section>
 
-      <section class="fact-section">
-        <h2>Facts unlocked</h2>
-        <div id="fact-list" class="fact-list"></div>
+      <section class="facts-section">
+        <div class="facts-header">
+          <h2>Learn a new fact</h2>
+          <p>Click the button to reveal meaningful facts about Mali's people, art, and heritage.</p>
+        </div>
+        <div class="fact-card" id="fact-card">
+          <strong>Fact</strong>
+          <p id="fact-text">Mali is home to the Great Mosque of Djenné, the largest mud-brick structure in the world.</p>
+        </div>
       </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
