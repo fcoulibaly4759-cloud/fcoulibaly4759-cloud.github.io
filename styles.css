@@ -1,13 +1,14 @@
 :root {
   color-scheme: dark;
   --bg: #050816;
-  --panel: rgba(15, 23, 42, 0.86);
-  --panel-2: rgba(30, 41, 59, 0.95);
+  --panel: rgba(15, 23, 42, 0.94);
+  --panel-soft: rgba(30, 41, 59, 0.88);
   --text: #f8fafc;
   --muted: #cbd5e1;
   --accent: #38bdf8;
   --accent-2: #818cf8;
-  --warning: #f59e0b;
+  --success: #22c55e;
+  --danger: #f59e0b;
 }
 
 * {
@@ -16,123 +17,188 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top, #14213d 0%, var(--bg) 55%, #02040d 100%);
-  color: var(--text);
   min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #1e2a4f 0%, #050816 48%, #02040d 100%);
+  color: var(--text);
 }
 
 .page-shell {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 32px 20px 60px;
+  padding: 28px 20px 60px;
 }
 
 .hero {
-  padding: 24px 0 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
+  gap: 28px;
+  align-items: center;
+  padding-bottom: 30px;
 }
 
-.eyebrow {
+.eyebrow,
+.panel-heading {
   text-transform: uppercase;
   letter-spacing: 0.35em;
   font-size: 0.8rem;
   color: var(--accent);
-  margin: 0 0 8px;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-size: clamp(2.5rem, 5vw, 4.6rem);
+  line-height: 1.05;
 }
 
 .hero-text {
-  max-width: 680px;
-  color: var(--muted);
+  max-width: 720px;
+  margin: 16px 0 0;
   font-size: 1.05rem;
-  line-height: 1.7;
-  margin: 12px 0 0;
+  line-height: 1.75;
+  color: var(--muted);
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 22px;
 }
 
 button {
   border: none;
   border-radius: 999px;
-  padding: 12px 18px;
+  padding: 14px 22px;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-  box-shadow: 0 10px 30px rgba(56, 189, 248, 0.25);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+  box-shadow: 0 16px 40px rgba(56, 189, 248, 0.22);
 }
 
 button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-.mini-note {
-  color: var(--muted);
-  font-size: 0.95rem;
+button:active {
+  transform: translateY(0);
 }
 
-.game-section {
-  margin-top: 24px;
-  display: grid;
-  gap: 16px;
-}
-
-.hud-card,
-.info-card,
+.hero-panel,
+.feature-card,
+.interactive-panel,
 .fact-section {
   background: var(--panel);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 22px;
-  padding: 18px 20px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 60px rgba(2, 6, 23, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 26px 70px rgba(2, 6, 23, 0.24);
 }
 
-.hud-card {
+.hero-panel {
+  padding: 24px;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.panel-grid div,
+.feature-card ul li,
+.fact-pill {
+  color: var(--muted);
+}
+
+.panel-grid div strong {
+  display: block;
+  margin-top: 6px;
+  color: white;
+  font-size: 1rem;
+}
+
+.feature-section {
+  margin-top: 12px;
+}
+
+.feature-card {
+  padding: 28px;
+}
+
+.feature-card h2,
+.interactive-panel h2,
+.fact-section h2 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 1.5rem;
+}
+
+.feature-card p {
+  max-width: 720px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.feature-card ul {
+  padding-left: 20px;
+  margin: 0;
+  list-style: disc;
+  line-height: 1.75;
+}
+
+.feature-card ul li {
+  margin-bottom: 10px;
+}
+
+.interactive-section {
+  margin-top: 32px;
+}
+
+.interactive-panel {
+  padding: 24px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.game-hud {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
+  margin: 22px 0;
 }
 
 .stat {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  padding: 18px;
+  background: var(--panel-soft);
+  border-radius: 18px;
 }
 
-.stat-wide {
-  grid-column: span 1;
-}
-
-.stat-label {
+.stat span {
+  display: block;
   color: var(--muted);
   font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
+  margin-bottom: 6px;
 }
 
 .stat strong {
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.2rem;
 }
 
-#game-container {
-  min-height: 420px;
+.canvas-shell {
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: #04111f;
 }
 
 canvas {
@@ -141,47 +207,76 @@ canvas {
   height: auto;
 }
 
-.info-card h2,
-.fact-section h2 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 1.1rem;
+.game-info {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.info-card ul {
+.game-info p {
   margin: 0;
-  padding-left: 18px;
   color: var(--muted);
-  line-height: 1.7;
+  line-height: 1.65;
+}
+
+.small-note {
+  color: #a5b4fc;
+}
+
+.fact-section {
+  margin-top: 28px;
+  padding: 24px;
 }
 
 .fact-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  gap: 16px;
+  margin-top: 18px;
 }
 
 .fact-pill {
-  background: var(--panel-2);
-  border: 1px solid rgba(56, 189, 248, 0.22);
-  border-radius: 16px;
-  padding: 12px 14px;
-  color: var(--muted);
-  line-height: 1.5;
+  background: var(--panel-soft);
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(56, 189, 248, 0.18);
 }
 
 .fact-pill strong {
   display: block;
   color: white;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  font-size: 1rem;
 }
 
-@media (max-width: 760px) {
-  .hud-card {
+@media (max-width: 900px) {
+  .hero {
     grid-template-columns: 1fr;
   }
 
+  .panel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .game-hud {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
   .page-shell {
-    padding-inline: 14px;
+    padding: 18px 14px 50px;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 10vw, 3.6rem);
+  }
+
+  .hero-actions,
+  .game-info {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
